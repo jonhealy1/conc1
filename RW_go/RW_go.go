@@ -25,7 +25,8 @@ if readers == 0
 mutex.signal()
 */
 
-/* The majority of this code comes from github.com/soniakeys/LittleBookOfSemaphores */
+/* The majority of this code comes from
+github.com/soniakeys/LittleBookOfSemaphores */
 
 package main
 

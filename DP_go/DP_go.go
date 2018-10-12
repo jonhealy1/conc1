@@ -1,5 +1,7 @@
 package main
 
+//source: github.com/soniakeys/LittleBookOfSemaphores/sem
+
 /*
 Variables and Definitions :
 1 def left(i): return i

@@ -1,5 +1,5 @@
 //package com.DPbaeldung.concurrent.diningphilosophers;
-//https://github.com/eugenp/tutorials/blob/master/core-java-concurrency/src/main/java/com/baeldung/concurrent/diningphilosophers/Philosopher.java
+//source: https://github.com/eugenp/tutorials/blob/master/core-java-concurrency/src/main/java/com/baeldung/concurrent/diningphilosophers/Philosopher.java
 import java.time.Instant;
 import java.util.concurrent.*;
 

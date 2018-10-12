@@ -1,4 +1,4 @@
-//https://paulamarcu.wordpress.com/2014/08/16/cigarette-smokers-problem/
+//source: https://paulamarcu.wordpress.com/2014/08/16/cigarette-smokers-problem/
 
 /**Having four threads: an agent and three smokers; the smokers wait for ingredients
 as long as the agent is available, then take the missing ingredients,

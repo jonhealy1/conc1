@@ -1,5 +1,7 @@
 package main
 
+//source: github.com/soniakeys/LittleBookOfSemaphores/sem
+
 import (
 	"fmt"
 	"sync"

@@ -1,5 +1,7 @@
 package main
 
+//source: github.com/soniakeys/LittleBookOfSemaphores/sem
+
 /*
 Variables:
 1 servings = 0

@@ -29,6 +29,8 @@ Barber Code:
 3 cutHair()
 */
 
+//source: github.com/soniakeys/LittleBookOfSemaphores/sem
+
 import (
 	"fmt"
 	"sync"
