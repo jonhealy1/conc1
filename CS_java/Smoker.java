@@ -3,6 +3,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class Smoker extends Thread {
  
@@ -13,14 +14,14 @@ public class Smoker extends Thread {
     public Smoker(SmokingAgent agent, String ingredient) {
         this.agent = agent;
         ownIngredient = ingredient;
-        if (ownIngredient.equals("Tabacco")) {
-            missingIngredients = "Paper and Matches";
+        if (ownIngredient.equals("tobacco")) {
+            missingIngredients = "paper and a match";
         }
-        if (ownIngredient.equals("Paper")) {
-            missingIngredients = "Tabacco and Matches";
+        if (ownIngredient.equals("paper")) {
+            missingIngredients = "tobacco and a match";
         }
-        if (ownIngredient.equals("Matches")) {
-            missingIngredients = "Paper and Tabacco";
+        if (ownIngredient.equals("matches")) {
+            missingIngredients = "paper and tobacco";
         }
     }
  
@@ -43,13 +44,13 @@ public class Smoker extends Thread {
                 e.printStackTrace();
             }
             if (agent.finished) {
-                System.out.println("The smoking agent " +
-                        "is no longer available.I'll give up smoking.");
+                System.out.println("Agent " +
+                        "not available.");
                 return;
             }
             if (agent.disposedIngredients.equals(missingIngredients)) {
-                System.out.println("I owe " + ownIngredient + " and I received "
-                        + agent.disposedIngredients + ", so now I can smoke.");
+                System.out.println("smoker with " + ownIngredient + " makes cigarette ");
+                System.out.println("smoker with " + ownIngredient + " smokes ");
             }
             agent.semaphoreSmoked.release();
         }

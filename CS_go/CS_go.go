@@ -1,9 +1,35 @@
 package main
 
+/*
+Variables:
+1 isTobacco = isPaper = isMatch = False
+2 tobaccoSem = Semaphore(0)
+3 paperSem = Semaphore(0)
+4 matchSem = Semaphore(0)
+Pushers Code:
+1 tobacco.wait()
+2 mutex.wait()
+3 if isPaper:
+4 isPaper = False
+5 matchSem.signal()
+6 elif isMatch:
+7 isMatch = False
+8 paperSem.signal()
+9 else:
+10 isTobacco = True
+11 mutex.signal()
+Smoker with Tobacco:
+1 tobaccoSem.wait()
+2 makeCigarette()
+3 agentSem.signal()
+4 smoke()
+*/
+
 import (
-	"log"
+	"fmt"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/soniakeys/LittleBookOfSemaphores/sem"
 )
@@ -27,9 +53,10 @@ var ( // Smoker semaphores
 var provided int64
 var wg sync.WaitGroup
 
-const rounds = 10
+const rounds = 1000
 
 func main() {
+	start := time.Now()
 	wg.Add(rounds)
 	go func() { // Agent A code
 		for {
@@ -37,7 +64,7 @@ func main() {
 			if atomic.AddInt64(&provided, 1) > rounds {
 				return
 			}
-			log.Println("agent provides tobacco and paper")
+			fmt.Println("agent provides tobacco and paper")
 			tobacco.Signal()
 			paper.Signal()
 		}
@@ -48,7 +75,7 @@ func main() {
 			if atomic.AddInt64(&provided, 1) > rounds {
 				return
 			}
-			log.Println("agent provides paper and a match")
+			fmt.Println("agent provides paper and a match")
 			paper.Signal()
 			match.Signal()
 		}
@@ -59,7 +86,7 @@ func main() {
 			if atomic.AddInt64(&provided, 1) > rounds {
 				return
 			}
-			log.Println("agent provides tobacco and a match")
+			fmt.Println("agent provides tobacco and a match")
 			tobacco.Signal()
 			match.Signal()
 		}
@@ -137,13 +164,15 @@ func main() {
 		}
 	}()
 	wg.Wait()
+	time.Sleep(100 * time.Millisecond)
+	fmt.Println(time.Since(start))
 }
 
 func makeCigarette(s string) {
-	log.Println("smoker with", s, "makes cigarette")
+	fmt.Println("smoker with", s, "makes cigarette")
 }
 
 func smoke(s string) {
-	log.Println("smoker with", s, "smokes")
+	fmt.Println("smoker with", s, "smokes")
 	wg.Done()
 }

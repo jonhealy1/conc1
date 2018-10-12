@@ -12,23 +12,24 @@ public class Philosopher implements Runnable {
 
     private void doAction(String action) throws InterruptedException {
         System.out.println(Thread.currentThread().getName() + " " + action);
-        Thread.sleep(((int) (Math.random() * 100)));
+        //Thread.sleep(((int) (Math.random() * 100)));
     }
 
     @Override
     public void run() {
         try {
-            while (true) {
-                doAction(System.nanoTime() + ": Thinking"); // thinking
+            //while (true) {
+            //for(int i = 0; i < 10; i++){
+                doAction("thinking"); // thinking
                 synchronized (leftFork) {
-                    doAction(System.nanoTime() + ": Picked up left fork");
+                    doAction("picked up left fork");
                     synchronized (rightFork) {
-                        doAction(System.nanoTime() + ": Picked up right fork - eating"); // eating
-                        doAction(System.nanoTime() + ": Put down right fork");
+                        doAction("picked up right fork - eating"); // eating
+                        doAction("put down right fork");
                     }
-                    doAction(System.nanoTime() + ": Put down left fork. Returning to thinking");
+                    doAction("put down left fork. Full");
                 }
-            }
+           // }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

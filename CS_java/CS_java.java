@@ -23,22 +23,34 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
- 
-
- 
-
+import java.time.Instant;
+//import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
  
 public class CS_java {
  
     public static void main(String[] args) {
         // TODO Auto-generated method stub
+        long startTime = Instant.now().toEpochMilli();
+
         SmokingAgent agent = new SmokingAgent();
-        Smoker tabaccoSmoker = new Smoker(agent, "Tabacco");
-        Smoker paperSmoker = new Smoker(agent, "Paper");
-        Smoker matchesSmoker = new Smoker(agent, "Matches");
+        Smoker tabaccoSmoker = new Smoker(agent, "tobacco");
+        Smoker paperSmoker = new Smoker(agent, "paper");
+        Smoker matchesSmoker = new Smoker(agent, "matches");
         agent.start();
         tabaccoSmoker.start();
         paperSmoker.start();
         matchesSmoker.start();
+        
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {
+            System.out.println("error");
+        }   
+        long endTime = Instant.now().toEpochMilli();
+
+        long timeElapsed = endTime - startTime;
+        
+        System.out.println(timeElapsed + "ms");
     }
 }

@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.concurrent.Semaphore;
+import java.time.Instant;
 
 //https://github.com/natashadecoste/ConcurrencyStudies/blob/master/DiningSavages.java
 
@@ -8,6 +9,7 @@ public class DiningSavages {
 	public static Semaphore accessToFood;
 	public int servingsAvailable;
 	public int servings;
+	public int runs = 0;
 
 	// Savages
 	class Savage implements Runnable {
@@ -27,7 +29,7 @@ public class DiningSavages {
 				// try to take a portion
 				while(servingsAvailable > 0){
 				try {
-					Thread.sleep(randomElement.nextInt(7) * 1000);
+					//Thread.sleep(randomElement.nextInt(7) * 1000);
 					accessToFood.acquire();
 
 				} catch (InterruptedException e) {
@@ -41,8 +43,9 @@ public class DiningSavages {
 
 		private synchronized void getServing(String name) {
 			if(servingsAvailable > 0){
-				System.out.println("Savage " + name + " getting serving");
+				System.out.println("Savage " + name + " gets serving from pot");
 				servingsAvailable --;
+				System.out.println("Savage " + name + " eats");
 				
 			}else {
 				System.out.println("Savage " + name + " checked the pot and theres nothing there!");
@@ -67,31 +70,23 @@ public class DiningSavages {
 		public void run(){
 			System.out.println("running");
 			
-			while(true){
+			while(true) {
 				refillPot();
-
-				
 			}
 		}
 		
 		public void refillPot(){
 			if(servingsAvailable < 1){
+				runs++;
+				if(runs == 3) {
+					System.exit(0);
+				}
 				System.out.println("refilling");
-	
+				
 				servingsAvailable = servings;
 			}
-
-
-
 		}
-
-		
 	} // end of Cook Class
-	
-	
-	
-
-	
 	public DiningSavages(int numOfSavages, int servingSize){
 		servings = servingSize;
 		accessToFood = new Semaphore(1);
@@ -105,17 +100,24 @@ public class DiningSavages {
 		for(int i=0; i< numOfSavages; i++){
 			Savage t = new Savage(Integer.toString(i));
 			t.begin();
-			
 		}
-		
 	}
-	
-	
-	
-	
-	
 	public static void main(String[] args) {
-		DiningSavages s = new DiningSavages(4,6);
+		long startTime = Instant.now().toEpochMilli();
+		 
+		DiningSavages s = new DiningSavages(4,4);
+		
+		try {
+            Thread.sleep(100);
+        } catch(InterruptedException e) {
+            System.out.println("error");
+        } 
+
+		long endTime = Instant.now().toEpochMilli();
+
+        long timeElapsed = endTime - startTime;
+        
+        System.out.println(timeElapsed + "ms");
 	}
 
 }

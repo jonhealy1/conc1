@@ -1,5 +1,12 @@
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
-//
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
+/* This code was inspired by github.com/soniakeys/LittleBookOfSemaphores 
+    and The Little Book of Semaphores */
+
 class RW_java {
     static Semaphore mutex = new Semaphore(1); //readLock
     static Semaphore roomEmpty = new Semaphore(1); //writeLock
@@ -19,11 +26,7 @@ class RW_java {
                 mutex.release();
 
                 //Reading section
-                System.out.println("Thread "+Thread.currentThread().getName() + " is READING");
-                Thread.sleep(1500);
-                System.out.println("Thread "+Thread.currentThread().getName() + " has FINISHED READING");
-
-                //Releasing section
+                System.out.println(Thread.currentThread().getName() + " sees " + virtualBytes + " bytes");
                 mutex.acquire();
                 readers--;
                 
@@ -42,9 +45,8 @@ class RW_java {
         public void run() {
             try {
                 roomEmpty.acquire();
-                System.out.println("Thread "+Thread.currentThread().getName() + " is WRITING");
-                Thread.sleep(2500);
-                System.out.println("Thread "+Thread.currentThread().getName() + " has finished WRITING");
+                virtualBytes++;
+                System.out.println(Thread.currentThread().getName() + " writes");
                 roomEmpty.release();
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -52,35 +54,33 @@ class RW_java {
         }
     }
     public static void main(String[] args) throws Exception {
+        
+        CountDownLatch latch = new CountDownLatch(2000);
+        
+        long startTime = Instant.now().toEpochMilli();
+        
         Reader read = new Reader();
         Writer write = new Writer();
         
-        Thread t1 = new Thread(read);
-        t1.setName("thread1");
-        Thread t2 = new Thread(read);
-        t2.setName("thread2");
-        Thread t3 = new Thread(write);
-        t3.setName("thread3");
-        Thread t4 = new Thread(read);
-        t4.setName("thread4");
-        t1.start();
-        t3.start();
-        t2.start();
-        t4.start();
-        
-        /*
-        for(int i = 0; i <= 3; i++){
-            String p;
-            p = "read";
-            Thread t1 = new Thread(read);
-            t1.setName(p);
+        for(int i = 0; i <1000; i++) {
+            Thread t10 = new Thread(write);
+            Thread t11 = new Thread(read);
+            t10.setName("writer " + Integer.toString(i));
+            t11.setName("reader " + Integer.toString(i));
+            t10.start();
+            t11.start();
         }
-        for(int i = 0; i <= 3; i++){
-            String p;
-            p = "write";
-            Thread t1 = new Thread(write);
-            t1.setName(p);
-        }*/
-        Thread.sleep(12500);
+        
+        for(int i = 0; i <= 2000; i++){
+            latch.countDown();
+        }
+
+        latch.await();
+        Thread.sleep(100);
+        long endTime = Instant.now().toEpochMilli();
+
+        long timeElapsed = endTime - startTime;
+        
+        System.out.println(timeElapsed + "ms");
     }
 }

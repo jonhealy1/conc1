@@ -1,9 +1,39 @@
+/*
+Pseudo Code - Little Book of Semaphores
+
+#Variables:
+int readers = 0
+mutex = Semaphore(1)
+roomEmpty = Semaphore(1)
+
+#Writers:
+roomEmpty.wait()
+critical section
+roomEmpty.signal()
+
+#Readers:
+mutex.wait()
+readers++
+if readers == 1
+	roomEmpty.wait()
+mutex.signal()
+critical section
+mutex.wait()
+readers—
+if readers == 0
+	roomEmpty.signal()
+mutex.signal()
+*/
+
+/* The majority of this code comes from github.com/soniakeys/LittleBookOfSemaphores */
+
 package main
 
 import (
 	"bytes"
-	"log"
+	"fmt"
 	"sync"
+	"time"
 
 	"github.com/soniakeys/LittleBookOfSemaphores/sem"
 )
@@ -19,7 +49,7 @@ var wg sync.WaitGroup
 
 func writer(nw int) {
 	roomEmpty.Wait()
-	log.Println("writer", nw, "writes")
+	fmt.Println("writer", nw, "writes")
 	b.WriteString("w")
 	roomEmpty.Signal()
 	wg.Done()
@@ -33,7 +63,7 @@ func reader(nr int) {
 	}
 	mutex.Signal()
 
-	log.Println("reader", nr, "sees", b.Len(), "bytes")
+	fmt.Println("reader", nr, "sees", b.Len(), "bytes")
 
 	mutex.Wait()
 	readers--
@@ -44,16 +74,17 @@ func reader(nr int) {
 	wg.Done()
 }
 
-const nw = 300
-const nr = 300
+const nw = 1000
+const nr = 1000
 
 func main() {
+	start := time.Now()
 	wg.Add(nw + nr)
-	for i := 1; i <= 300; i++ {
+	for i := 1; i <= 1000; i++ {
 		go writer(i)
-	}
-	for i := 1; i <= 300; i++ {
 		go reader(i)
 	}
 	wg.Wait()
+	time.Sleep(100 * time.Millisecond)
+	fmt.Println(time.Since(start))
 }

@@ -16,7 +16,7 @@ public class SmokingAgent extends Thread {
     public void run() {
         Random random = new Random();
         int currentIngredients;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             latch = new CountDownLatch(3);
             semaphoreLatchStart.release(3);
             try {
@@ -26,15 +26,15 @@ public class SmokingAgent extends Thread {
             }
             currentIngredients = random.nextInt(3);
             if (currentIngredients == 0) {
-                disposedIngredients = "Paper and Matches";
+                disposedIngredients = "paper and a match";
             }
             if (currentIngredients == 1) {
-                disposedIngredients = "Tabacco and Matches";
+                disposedIngredients = "tobacco and a match";
             }
             if (currentIngredients == 2) {
-                disposedIngredients = "Paper and Tabacco";
+                disposedIngredients = "paper and tobacco";
             }
-            System.out.println("Disposed Ingredients: " + disposedIngredients);
+            System.out.println("agent provides " + disposedIngredients);
             semaphoreIngredient.release(3);
             try {
                 semaphoreSmoked.acquire(3);
